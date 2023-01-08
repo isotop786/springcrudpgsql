@@ -56,4 +56,56 @@ public class TutorialController {
 		}
 	}
 	
+	// Fetch Tutorial by ID
+	@GetMapping("/tutorials/{id}")
+	public ResponseEntity<Tutorial> getTutorialById(@PathVariable("id") long id)
+	{
+		Optional<Tutorial> tutorialData = tutorialRepository.findById(id);
+		
+		if(tutorialData.isPresent()) {
+			return new ResponseEntity<>(tutorialData.get(), HttpStatus.OK);
+		}
+		else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	// Create new tutorial
+	@PostMapping("/tutorials")
+	public ResponseEntity<Tutorial> createTutorial(@RequestBody Tutorial tutorial)
+	{
+		try {
+			Tutorial _tutorial = tutorialRepository.save(new Tutorial(
+					tutorial.getTitle(),
+					tutorial.getDescription(),
+					false
+					));
+			return new ResponseEntity<>(_tutorial,HttpStatus.CREATED);
+			
+		}catch(Exception e)
+		{
+			return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	// updating a tutorial
+	@PutMapping("/tutorials/{id}")
+	public ResponseEntity<Tutorial> updateTutorial(@PathVariable("id") long id, @RequestBody Tutorial tutorial)
+	{
+		Optional<Tutorial> tutorialData = tutorialRepository.findById(id);
+		
+		if(tutorialData.isPresent())
+		{
+			Tutorial _tut = tutorialData.get();
+			_tut.setTitle(tutorial.getTitle());
+			_tut.setDescription(tutorial.getDescription());
+			_tut.setPublished(tutorial.isPublished());
+			
+			return new ResponseEntity<>(tutorialRepository.save(_tut), HttpStatus.OK);
+		}
+		else {
+			return new ResponseEntity<> (HttpStatus.NOT_FOUND);
+		}
+	}
+	
 }

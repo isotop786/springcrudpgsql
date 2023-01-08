@@ -22,6 +22,15 @@ public class Tutorial {
 	public Tutorial() {
 		
 	}
+	
+	public Tutorial(String title, String description, boolean published) {
+		super();
+		this.title = title;
+		this.description = description;
+		this.published = published;
+	}
+
+
 
 	public String getTitle() {
 		return title;
